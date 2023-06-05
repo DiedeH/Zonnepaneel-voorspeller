@@ -55,8 +55,8 @@ void vermogenBerekenen(){
   vermogen += (current * spanning * (waardeTijd*pow(10,-6)));  
   starten = micros();
   spanning = (ina219.getShuntVoltage_mV()/1000) + ina219.getBusVoltage_V() - 0.008; //shunt moet naar V,  nu in mVwe
-  current = ina219.getCurrent_mA()*0.0001; //Shunt = 1 Ohm
-  if(current < 0.003){current = 0.00001;}
+  current = ina219.getCurrent_mA()*0.0001; //Shunt = 1 Ohm 
+  if(current < 0.003){current = 0.000;}
   if(spanning < 0){spanning = 0;} 
   VMPT();
 }
