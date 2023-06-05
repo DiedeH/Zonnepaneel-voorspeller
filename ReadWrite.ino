@@ -30,7 +30,8 @@ float spanning;
 int temperatuur = A3;
 float Vmp;
 
-int sampletijdsec;
+volatile uint16_t sampletijdsec;
+volatile uint8_t seconden;
 char recordArray[5][20];
 char aRecord[20];
 uint8_t recordNum;  
@@ -38,7 +39,7 @@ uint8_t charNum;
 
 uint16_t sampletijd;
 uint8_t dag, maand, jaar;
-uint8_t uur, minuut, seconden = 0;
+uint8_t uur, minuut;
 uint8_t PaneelVmp = 12;
 unsigned long waardeTijd;
 
@@ -94,6 +95,7 @@ void VMPT(){ //VMPT berekenen en spanning aanpassen
     } 
   } 
   counter = min(max(counter, 1), 500);
+  Vmp = PaneelVmp - ((temperatuurLezen() - 25)*0.0036*PaneelVmp);
 }
 
 int temperatuurLezen(){ //temperatuur berekenen van NTC
@@ -140,22 +142,9 @@ void GegevensNaarInt(){
 
 
 ISR(TIMER1_OVF_vect){ //timer interrupt, precies 1 seconden
-  Vmp = PaneelVmp - ((temperatuurLezen() - 25)*0.0036*PaneelVmp); //berekende maximale vermogen spanning
   seconden++;
   sampletijdsec++;
   TCNT1 = 3036;
-  TCCR1B |= (1<<CS12); //prescaler
-  TIMSK1 |= (1<<TOIE1); //Enable timer interrupt, (TIMSK1 &= ~(1<<TOIE1) = disable timer)
-  if(seconden > 59){ //als seconden 1 minuut is tijden aanpassen
-    minuut++;
-    BerekenTijd();
-    seconden = 0;
-  }
-  if(sampletijdsec >= sampletijd){ //schrijven naar sd als seconden > ingestelde tijd
-    SchrijvenSD2();
-    sampletijdsec = 0;
-    vermogen = 0;
-  }
 }
 
 void BerekenTijd(){
@@ -257,26 +246,14 @@ void setup() {
 
 void loop() {
   vermogenBerekenen();
+  if(seconden > 59){ //als seconden 1 minuut is tijden aanpassen
+    minuut++;
+    BerekenTijd();
+    seconden = 0;
+  }
+  if(sampletijdsec >= sampletijd){ //schrijven naar sd als seconden > ingestelde tijd
+    SchrijvenSD2();
+    sampletijdsec = 0;
+    vermogen = 0;
+  }  
 }
-/*
-void SchrijvenSD(){
-   // Serial.println(fileName);
-    myFile = SD.open(fileName, FILE_WRITE);
-    myFile.println(klantnummer);
-
-    myFile.print("Vmp = ");
-    myFile.println(Vmp);
-    myFile.print("Temp = ");
-    myFile.println(temperatuurLezen());
-    myFile.print("U = ");
-    myFile.println(spanning);
-    myFile.print("I = ");
-    myFile.println(current);    
-    myFile.print("W = ");
-    myFile.println(vermogen,3);
-    myFile.print("W = ");
-    myFile.println(waardeTijd);
-    myFile.close();
-}
-*/
-
