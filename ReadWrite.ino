@@ -144,7 +144,7 @@ void GegevensNaarInt(){
 ISR(TIMER1_OVF_vect){ //timer interrupt, precies 1 seconden
   seconden++;
   sampletijdsec++;
-  TCNT1 = 3036;
+  TCNT1 = 18661;
 }
 
 void BerekenTijd(){
@@ -238,7 +238,7 @@ void setup() {
   seconden = 0;
   TCCR1A = 0;
   TCCR1B = 0;
-  TCNT1 = 3036;
+  TCNT1 = 18661;
   TCCR1B |= (1<<CS12); //prescaler
   TIMSK1 |= (1<<TOIE1); //Enable timer interrupt, (TIMSK1 &= ~(1<<TOIE1) = disable timer)
   Vmp = PaneelVmp - ((temperatuurLezen() - 25)*0.0036*PaneelVmp); //berekende maximale vermogen spanning
