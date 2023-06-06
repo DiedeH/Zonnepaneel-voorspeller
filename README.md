@@ -6,9 +6,9 @@ Dit bestand met het volgende bevatten precies op deze manier:
 
 Datum: 01-01-2023
 Tijd: 00:00
-Klantnummer: 999
+Klant: 999
 Vmp: 999
-Sampletijd: 9999 
+SampleTijd: 9999 
 ////////////////////////////
 
 Na het lezen van het bestand wordt er een txt bestand aangemaakt genaamd "KLANT999.txt"
