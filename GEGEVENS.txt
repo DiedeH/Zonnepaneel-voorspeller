@@ -1,0 +1,6 @@
+Datum: 6-6-23
+Tijd: 13:58
+Klant: 100
+Vmp: 12
+SampleTijd: 10
+/////////////
